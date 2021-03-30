@@ -1,24 +1,41 @@
-# Olet onnistuneesti hakenut päivitykset upstream repositorysta
+I decided to use unordered map as a datastructure for storing my place and area structs. I chose unordered map because I didn't see any value in keeping the map in order and adding new elements would be fast. 
 
-# You have successfully pulled updates from the upstream repository
+In all_places I decided to create a vector because the return value was to be a vector. Then I simply went through my unordered map and added all ids to the vector.
 
-# NOTE! About available test files in prg1
+In add_place I check if my datastructure already contains the id. If not I create a new struct and add it to the datastructure.
 
-Short explanation of test files:
-- Files named "...-in.txt" are input files containing commands for different tests.
-- Files named "...-out.txt" are output files containing expected output of the corresponding input.
+In get_place_name_type I again check if my datastructure already contains the id. If it does I simply return a pair with the asked values.
 
-You can either just run the input file with command 'read "...-in.txt"' or compare your own output with the expected output with command 'testread "...-in.txt" "...-out.txt"' (the graphical UI's file selector allows you to select both files at once by control-clicking with mouse).
+In get_place_coord I once again check if my datastructure already contains the id. If it does I return the asked coordinates.
 
-Files named "perftest-....txt" are performance tests of various types of operations. They can be run with command
-'read "perftest-....txt"'.
+In add_area I check if my unordered map contains the area id. If it doesn't, I create a new area with my struct and add it to the datastructure.
 
-Correctness tests:
-- simpletest-compulsory/all-in/out.txt: Really simple test to find most obvious bugs
-- example-compulsory/all-in/out.txt: The example in the assignment description, showing basic operation of all commands
-- kintulammi-test-compulsory/all-in/out.txt: More tests using real Kintulammi nature reserve data from OpenStreetmap
+In get_area_name I check if the area id is in the datastructure. If found, I return the coordinates of the area.
 
-Additionally, the following data files exist as data for your own testing:
-- kintulammi-places/areas.txt: Real Kintulammi nature reserve data from OpenStreetmap (~51 places, ~40 areas)
-- hervanta-south-places/areas.txt: Real Openstreetmap data south of Hervanta (~75 places, ~63 areas)
-- helv-places/areas.txt: Real OpenStreetmap data of Helvetinjärvi National Park (~240 places, ~320 areas)
+I use a lot of std::find in these previous functions because its complexity is constant when searching through an unordered map.
+
+In places_alphabetically I create a vector of pairs and push pairs made from the unordered map into it. Then I sort it with std::sort using a lambda function to determine the order.
+Then I create a new vector and push the ids from the first vector into it. Vector is used again because it is the function's desired return value.
+
+places_coord_order is done in almost similiar fashion. The only difference really is different lambda function.
+
+find_places_name again uses a vector because it is the return value. It also uses a for-loop for going through the unordered map. This sadly makes many of my functions linear by their complexity, but I didn't find any other way to implement the functions
+
+find_places_type is almost the same as the previous function.
+
+change_place_name and change_place_coord simply use the std::find again.
+
+all_areas simply creates a vector and goes through the unordered map.
+
+add_subarea_to_area Checks if the ids exist and if the subarea already has a parent area. If everything is ok, it adds the subarea to the parentareas subarea vector and the parentarea to the subarea. 
+
+subarea_in_areas is like any other of these, but it uses a recursive function to go through all possible parentareas.
+
+places_closest_to is a bit longer and performs some checks in the beginning to adjust the return values based on the parameters. Then it uses a lambda fuction in a std::sort to sort a vector of pairs.
+After this it uses maybe a bit dumb method to return 3 values at most.
+
+remove_place is a simple fuction that uses std::find again.
+
+all_subareas_in_area is like subarea_in_areas but the recursive function goes through a vector.
+
+common_area_of_subareas if a bit heavier function given its nested for loops. This sadly makes the complexity n^2.
